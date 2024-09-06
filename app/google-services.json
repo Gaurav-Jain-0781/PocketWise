@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "28437722282",
+    "project_id": "pocketwise-e7379",
+    "storage_bucket": "pocketwise-e7379.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:28437722282:android:0c82b56a2ab0ad8da2ccd3",
+        "android_client_info": {
+          "package_name": "com.example.pocketwise"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFTQwSjzTSmLTePyK_H9cXRcUrcNffslA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
