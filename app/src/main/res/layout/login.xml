@@ -1,14 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    android:id="@+id/login">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/black_background"
         android:layout_width="match_parent"
         android:layout_height="410dp"
+        android:background="@color/primary"
         android:gravity="center">
 
         <androidx.cardview.widget.CardView
@@ -24,26 +24,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:src="@drawable/logo"
+                android:src="@drawable/logo_name"
                 android:scaleType="centerCrop"
+                android:background="@drawable/circular_background"
                 android:padding="0dp" />
 
         </androidx.cardview.widget.CardView>
 
     </RelativeLayout>
 
-    <!-- White Background with Rounded Corners -->
     <RelativeLayout
         android:id="@+id/white_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/black_background"
+        android:background="@drawable/rounded_corners_background"
         android:paddingTop="0dp"
         android:clipToPadding="false"
         android:elevation="8dp"
         android:layout_marginTop="-50dp">
 
-        <!-- Inner Container for Login Form -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,6 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:fontFamily="@font/righteous"
                 android:gravity="center"
                 android:text="Welcome Back!"
                 android:layout_marginTop="10dp"
@@ -70,6 +71,7 @@
                 android:textColor="@color/black"
                 android:hint="Username"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/dosis_semibold"
                 android:textColorHint="@color/black"
                 android:inputType="textEmailAddress"
                 android:padding="12dp" />
@@ -82,6 +84,7 @@
                 android:background="@color/background"
                 android:textColor="@color/black"
                 android:hint="Password"
+                android:fontFamily="@font/dosis_semibold"
                 android:textColorHint="@color/black"
                 android:layout_marginTop="15dp"
                 android:inputType="textPassword"
@@ -95,6 +98,7 @@
                 android:backgroundTint="#000000"
                 android:padding="10dp"
                 android:textSize="22sp"
+                android:fontFamily="@font/dosis_semibold"
                 android:layout_marginTop="15dp"
                 android:text="Login"
                 android:textColor="#FFFFFF" />
@@ -108,6 +112,7 @@
                 android:text="Don't have any account? Sign Up"
                 android:layout_marginTop="10dp"
                 android:textColor="#000000"
+                android:fontFamily="@font/dosis_semibold"
                 android:textSize="15sp"
                 android:clickable="true"
                 android:focusable="true" />
