@@ -47,7 +47,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun fetchData(name: String, password: String) {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
         finish()
     }
