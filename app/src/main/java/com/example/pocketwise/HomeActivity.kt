@@ -2,6 +2,7 @@ package com.example.pocketwise
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -33,20 +34,26 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun handleNavigation(menuItem: MenuItem) {
+        Log.d("HomeActivity", "Navigation item selected: ${menuItem.itemId}")
         when (menuItem.itemId) {
             R.id.home_nav_menu -> {
+                Log.d("HomeActivity", "Home menu selected")
                 startActivity(Intent(this, HomeActivity::class.java))
             }
             R.id.summary_nav_menu -> {
+                Log.d("HomeActivity", "Summary menu selected")
                 startActivity(Intent(this, SummaryActivity::class.java))
             }
             R.id.history_nav_menu -> {
+                Log.d("HomeActivity", "History menu selected")
                 startActivity(Intent(this, HistoryActivity::class.java))
             }
             R.id.profile_nav_menu -> {
+                Log.d("HomeActivity", "Profile menu selected")
                 startActivity(Intent(this, ProfileActivity::class.java))
             }
             R.id.logout_nav_menu -> {
+                Log.d("HomeActivity", "Logout menu selected")
                 startActivity(Intent(this, MainActivity::class.java))
             }
         }
