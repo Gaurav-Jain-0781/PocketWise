@@ -20,8 +20,14 @@ import android.content.SharedPreferences
 import android.provider.ContactsContract
 import android.util.Log
 import android.content.Context
+import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 
 class ProfileActivity :AppCompatActivity(){
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profileImageView:ImageView
     private lateinit var nameTextView: TextView
     private lateinit var universityTextView: TextView
@@ -35,7 +41,6 @@ class ProfileActivity :AppCompatActivity(){
     private val PREF_NAME = "ProfilePrefs"
     private val PROFILE_IMAGE_KEY = "profile_image"
     private val CONTACTS_KEY = "contacts"
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +76,48 @@ class ProfileActivity :AppCompatActivity(){
             }else{
                 pickContact()
             }
+        }
+
+        drawerLayout = findViewById(R.id.myDrawerLayout)
+        actionBarDrawerToggle= ActionBarDrawerToggle(this,drawerLayout,R.string.nav_open,R.string.nav_close)
+        drawerLayout.addDrawerListener(actionBarDrawerToggle)
+        actionBarDrawerToggle.syncState()
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            handleNavigation(menuItem)
+            true
+        }
+    }
+
+    private fun handleNavigation(menuItem: MenuItem) {
+        when (menuItem.itemId) {
+            R.id.home_nav_menu -> {
+                startActivity(Intent(this, HomeActivity::class.java))
+            }
+            R.id.summary_nav_menu -> {
+                startActivity(Intent(this, SummaryActivity::class.java))
+            }
+            R.id.history_nav_menu -> {
+                startActivity(Intent(this, HistoryActivity::class.java))
+            }
+            R.id.profile_nav_menu -> {
+                startActivity(Intent(this, ProfileActivity::class.java))
+            }
+            R.id.logout_nav_menu -> {
+                startActivity(Intent(this, MainActivity::class.java))
+            }
+        }
+        drawerLayout.closeDrawers()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if(actionBarDrawerToggle.onOptionsItemSelected(item)){
+            true
+        } else {
+            super.onOptionsItemSelected(item)
         }
     }
 
