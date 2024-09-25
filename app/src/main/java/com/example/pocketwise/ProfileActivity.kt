@@ -20,12 +20,18 @@ import android.content.SharedPreferences
 import android.provider.ContactsContract
 import android.util.Log
 import android.content.Context
+import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 
 class ProfileActivity :AppCompatActivity(){
+    private lateinit var toolbar: Toolbar
+    private lateinit var navbar: NavigationView
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profileImageView:ImageView
@@ -45,7 +51,49 @@ class ProfileActivity :AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.profile)
-        Log.d("ProfileActivity", "ProfileActivity launched")
+
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        navbar = findViewById(R.id.nav_view)
+        drawerLayout = findViewById(R.id.myDrawerLayout)
+        actionBarDrawerToggle=ActionBarDrawerToggle(this,drawerLayout,R.string.nav_open,R.string.nav_close)
+        drawerLayout.addDrawerListener(actionBarDrawerToggle)
+        actionBarDrawerToggle.syncState()
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        navbar.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.home_nav_menu -> {
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.summary_nav_menu -> {
+                    val intent = Intent(this, SummaryActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.history_nav_menu -> {
+                    val intent = Intent(this, HistoryActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.profile_nav_menu -> {
+                    Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, ProfileActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.logout_nav_menu -> {
+                    Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
 
         sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
@@ -77,47 +125,25 @@ class ProfileActivity :AppCompatActivity(){
                 pickContact()
             }
         }
-
-        drawerLayout = findViewById(R.id.myDrawerLayout)
-        actionBarDrawerToggle= ActionBarDrawerToggle(this,drawerLayout,R.string.nav_open,R.string.nav_close)
-        drawerLayout.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        val navigationView = findViewById<NavigationView>(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener { menuItem ->
-            handleNavigation(menuItem)
-            true
-        }
-    }
-
-    private fun handleNavigation(menuItem: MenuItem) {
-        when (menuItem.itemId) {
-            R.id.home_nav_menu -> {
-                startActivity(Intent(this, HomeActivity::class.java))
-            }
-            R.id.summary_nav_menu -> {
-                startActivity(Intent(this, SummaryActivity::class.java))
-            }
-            R.id.history_nav_menu -> {
-                startActivity(Intent(this, HistoryActivity::class.java))
-            }
-            R.id.profile_nav_menu -> {
-                startActivity(Intent(this, ProfileActivity::class.java))
-            }
-            R.id.logout_nav_menu -> {
-                startActivity(Intent(this, MainActivity::class.java))
-            }
-        }
-        drawerLayout.closeDrawers()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if(actionBarDrawerToggle.onOptionsItemSelected(item)){
-            true
-        } else {
-            super.onOptionsItemSelected(item)
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return false
+    }
+
+    override fun onBackPressed() {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        else{
+            return super.onBackPressed()
         }
     }
 
