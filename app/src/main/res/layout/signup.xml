@@ -1,21 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/primary">
 
     <RelativeLayout
-        android:id="@+id/black_background"
+        android:id="@+id/signupText"
         android:layout_width="match_parent"
-        android:layout_height="134dp"
-        android:layout_marginTop="40dp"
+        android:layout_height="wrap_content"
         android:gravity="center">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="45dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:gravity="center"
             android:text="Sign Up"
             android:textColor="#000000"
@@ -30,13 +32,13 @@
         android:id="@+id/white_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/black_background"
+        android:layout_below="@id/signupText"
+        android:background="@drawable/rounded_corners_background"
         android:layout_marginTop="0dp"
         android:clipToPadding="false"
         android:elevation="8dp"
         android:paddingTop="0dp">
 
-        <!-- Inner Container for Sign Up Form -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -46,13 +48,37 @@
             android:padding="30dp">
 
             <EditText
-                android:id="@+id/username"
+                android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:background="@color/background"
                 android:textColor="@color/black"
-                android:hint="UserName"
+                android:hint="Name"
+                android:textColorHint="@color/black"
+                android:inputType="text"
+                android:padding="12dp" />
+
+            <EditText
+                android:id="@+id/reg_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@color/background"
+                android:textColor="@color/black"
+                android:hint="Registration Number"
+                android:textColorHint="@color/black"
+                android:inputType="text"
+                android:padding="12dp" />
+
+            <EditText
+                android:id="@+id/college"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@color/background"
+                android:textColor="@color/black"
+                android:hint="University"
                 android:textColorHint="@color/black"
                 android:inputType="text"
                 android:padding="12dp" />
