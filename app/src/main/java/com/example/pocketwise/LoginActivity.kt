@@ -8,6 +8,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var username : EditText
@@ -47,8 +49,41 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun fetchData(name: String, password: String) {
-        val intent = Intent(this, HomeActivity::class.java)
-        startActivity(intent)
-        finish()
+        val db = Firebase.firestore
+
+        db.collection("students")
+            .whereEqualTo("name", name)
+            .whereEqualTo("password", password)
+            .get()
+            .addOnSuccessListener {  document ->
+                if(document.isEmpty){
+                    Toast.makeText(this, "Invalid Credentials", Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    for (d in document.documents) {
+                        val userId = d.id
+                        val userName = d.getString("name")
+
+                        saveSession(userName, userId)
+                        Toast.makeText(this, "Welcome, $userName", Toast.LENGTH_SHORT).show()
+
+                        val intent = Intent(this, ProfileActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Login Failed! Try Again..", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun saveSession(userName : String?, userId : String){
+        val sharedPreference = getSharedPreferences("user_session", MODE_PRIVATE)
+        val editor = sharedPreference.edit()
+        editor.putString("userId", userId)
+        editor.putString("userName", userName)
+        editor.putBoolean("loggedIn", true)
+        editor.apply()
     }
 }
