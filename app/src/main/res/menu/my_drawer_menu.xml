@@ -10,6 +10,9 @@
         android:title="History"
         android:id="@+id/history_nav_menu"/>
     <item
+        android:title="Expense"
+        android:id="@+id/expense_nav_menu"/>
+    <item
         android:title="Profile"
         android:id="@+id/profile_nav_menu"/>
     <item

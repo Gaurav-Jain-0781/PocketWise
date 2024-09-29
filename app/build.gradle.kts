@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.common.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

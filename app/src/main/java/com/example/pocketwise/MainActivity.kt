@@ -32,8 +32,23 @@ class MainActivity : AppCompatActivity() {
         app.startAnimation(bottomAnimation)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
+            checkLoginStatus()
         }, 2000)
+    }
+
+    private fun checkLoginStatus() {
+        val sharedPreference = getSharedPreferences("user_session", MODE_PRIVATE)
+        val loggedIn = sharedPreference.getBoolean("loggedIn", false)
+        val loginTimestamp = sharedPreference.getLong("loginTimestamp", 0)
+        val currentTime = System.currentTimeMillis()
+        val sevenDaysInMillis = 7 * 24 * 60 * 60 * 1000
+
+        if (loggedIn && (currentTime - loginTimestamp) < sevenDaysInMillis) {
+            startActivity(Intent(this, HomeActivity::class.java))
+        } else {
+            sharedPreference.edit().clear().apply()
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+        finish()
     }
 }

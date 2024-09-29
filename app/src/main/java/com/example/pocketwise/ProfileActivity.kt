@@ -18,7 +18,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.SharedPreferences
 import android.provider.ContactsContract
-import android.util.Log
 import android.content.Context
 import android.view.Menu
 import android.view.MenuItem
@@ -76,6 +75,11 @@ class ProfileActivity :AppCompatActivity(){
 
                 R.id.history_nav_menu -> {
                     val intent = Intent(this, HistoryActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.expense_nav_menu-> {
+                    val intent =Intent(this,ExpenseActivity::class.java)
                     startActivity(intent)
                 }
 

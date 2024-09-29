@@ -84,6 +84,7 @@ class LoginActivity : AppCompatActivity() {
         editor.putString("userId", userId)
         editor.putString("userName", userName)
         editor.putBoolean("loggedIn", true)
+        editor.putLong("loginTimestamp", System.currentTimeMillis())
         editor.apply()
     }
 }
