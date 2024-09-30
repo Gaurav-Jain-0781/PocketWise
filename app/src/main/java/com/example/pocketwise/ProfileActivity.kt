@@ -18,9 +18,12 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.storage
 
 class ProfileActivity :AppCompatActivity(){
     private lateinit var toolbar: Toolbar
@@ -135,7 +138,6 @@ class ProfileActivity :AppCompatActivity(){
             val galleryIntent=Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             galleryLauncher.launch(galleryIntent)
         }
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -164,6 +166,7 @@ class ProfileActivity :AppCompatActivity(){
             if (selectedImageUri != null) {
                 profileImageView.setImageURI(selectedImageUri)
                 saveProfileImage(selectedImageUri.toString())
+                uploadImageToFirebase(selectedImageUri)
             }
         }
     }
@@ -176,12 +179,55 @@ class ProfileActivity :AppCompatActivity(){
     }
 
     private fun loadProfileImage() {
-        val imageUriString = sharedPreferences.getString(PROFILE_IMAGE_KEY, null)
-        if (imageUriString != null) {
-            val imageUri = Uri.parse(imageUriString)
-            profileImageView.setImageURI(imageUri)
+        if(checkSession()) {
+            val sharedPreference = getSharedPreferences("user_session", MODE_PRIVATE)
+            val userId = sharedPreference.getString("userId", null)
+
+            if (userId != null) {
+                val storageReference = Firebase.storage.reference
+                val imageReference = storageReference.child("images/${userId}.jpg")
+
+                imageReference.downloadUrl
+                    .addOnSuccessListener { uri ->
+                        Glide.with(this)
+                            .load(uri)
+                            .into(profileImageView)
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Failed to load Image", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                Toast.makeText(this, "Error Loading Photo", Toast.LENGTH_SHORT).show()
+            }
         } else {
-            profileImageView.setImageResource(R.drawable.default_profile_image)  // Default image
+            profileImageView.setImageResource(R.drawable.default_profile_image)
+        }
+    }
+
+    private fun uploadImageToFirebase(imageUri: Uri?) {
+        if (imageUri != null) {
+            val storageReference = FirebaseStorage.getInstance().reference
+
+            if(checkSession()){
+                val sharedPreference = getSharedPreferences("user_session", MODE_PRIVATE)
+                val userID = sharedPreference.getString("userId", null)
+
+                if(userID != null){
+                    val imageReference = storageReference.child("images/${userID}.jpg")
+                    val uploadTask = imageReference.putFile(imageUri)
+
+                    uploadTask.addOnSuccessListener {
+                        Toast.makeText(this, "Image Upload Successfully", Toast.LENGTH_SHORT).show()
+                        loadProfileImage()
+                    }.addOnFailureListener {
+                        Toast.makeText(this, "Image Upload Failed", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this, "Error Loading User Id", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Error in User Session", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
