@@ -83,6 +83,12 @@ class ProfileActivity :AppCompatActivity(){
                     startActivity(intent)
                 }
 
+                R.id.ioweu_nav_menu->{
+                    Toast.makeText(this, "IOweU", Toast.LENGTH_SHORT).show()
+                    val intent=Intent(this,IOweUActivity::class.java)
+                    startActivity(intent)
+                }
+
                 R.id.profile_nav_menu -> {
                     Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, ProfileActivity::class.java)

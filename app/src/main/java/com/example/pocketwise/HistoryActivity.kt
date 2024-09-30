@@ -43,7 +43,7 @@ class HistoryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        setContentView(R.layout.history)
         enableEdgeToEdge()
 
         toolbar = findViewById(R.id.toolbar)
@@ -78,6 +78,12 @@ class HistoryActivity : AppCompatActivity() {
 
                 R.id.expense_nav_menu-> {
                     val intent =Intent(this,ExpenseActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.ioweu_nav_menu->{
+                    Toast.makeText(this, "IOweU", Toast.LENGTH_SHORT).show()
+                    val intent=Intent(this,IOweUActivity::class.java)
                     startActivity(intent)
                 }
 

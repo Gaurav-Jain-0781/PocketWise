@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -53,6 +54,12 @@ class HomeActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
 
+        val currentPocketMoney = findViewById<TextView>(R.id.currentPocketMoney)
+        currentPocketMoney.text = "Pocket Money: $500"
+
+        val oweAmount = findViewById<TextView>(R.id.oweAmount)
+        oweAmount.text = "Owe: -$100"
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         navbar.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -73,6 +80,12 @@ class HomeActivity : AppCompatActivity() {
 
                 R.id.expense_nav_menu-> {
                     val intent =Intent(this,ExpenseActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.ioweu_nav_menu->{
+                    Toast.makeText(this, "IOweU", Toast.LENGTH_SHORT).show()
+                    val intent=Intent(this,IOweUActivity::class.java)
                     startActivity(intent)
                 }
 

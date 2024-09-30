@@ -5,7 +5,7 @@
     android:id="@+id/myDrawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HistoryActivity">
+    tools:context=".IOweUActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:text="History"
+                android:text="IOweU"
                 android:textSize="30sp"
                 android:textColor="@android:color/white"
                 android:fontFamily="@font/righteous" />

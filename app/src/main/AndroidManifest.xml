@@ -21,7 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PocketWise"
         tools:targetApi="31">
-
+        <activity
+            android:name=".IOweUActivity"
+            android:exported="false"
+            android:label=""/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -33,10 +36,10 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".SignUpActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false"
@@ -44,7 +47,7 @@
         <activity
             android:name=".ExpenseActivity"
             android:exported="false"
-            android:label=""/>
+            android:label="" />
         <activity
             android:name=".HistoryActivity"
             android:exported="false"
