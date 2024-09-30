@@ -1,23 +1,15 @@
 package com.example.pocketwise
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
-import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import android.net.Uri
-import android.Manifest
 import android.app.Activity
 import android.content.SharedPreferences
-import android.provider.ContactsContract
 import android.content.Context
 import android.view.Menu
 import android.view.MenuItem
@@ -27,6 +19,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 
 class ProfileActivity :AppCompatActivity(){
     private lateinit var toolbar: Toolbar
@@ -34,18 +28,17 @@ class ProfileActivity :AppCompatActivity(){
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var profileImageView:ImageView
-    private lateinit var nameTextView: TextView
-    private lateinit var universityTextView: TextView
-    private lateinit var contactListView: ListView
-    private lateinit var addContactButton: Button
-    private lateinit var contactAdapter: ArrayAdapter<String>
-    private val contactList= mutableListOf<String>()
+    private lateinit var name: TextView
+    private lateinit var regNo: TextView
+    private lateinit var university: TextView
+    private lateinit var email: TextView
+    private lateinit var currentBalance: TextView
+    private lateinit var monthlyPocket: TextView
+    private lateinit var savings: TextView
     private lateinit var sharedPreferences: SharedPreferences
-
-    private val CONTACT_PICK_REQUEST=1
+    private val studentArray : Array<String?> = arrayOf(null, null, null, null, null, null, null)
     private val PREF_NAME = "ProfilePrefs"
     private val PROFILE_IMAGE_KEY = "profile_image"
-    private val CONTACTS_KEY = "contacts"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,33 +101,41 @@ class ProfileActivity :AppCompatActivity(){
         sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
         profileImageView=findViewById(R.id.profileImageView)
-        nameTextView = findViewById(R.id.nameTextView)
-        universityTextView = findViewById(R.id.universityTextView)
-        contactListView = findViewById(R.id.contactListView)
-        addContactButton = findViewById(R.id.addContactButton)
-
-        nameTextView.text = "Yash Mehta"
-        universityTextView.text = "Christ University,Banglore Central Campus"
-
-        contactAdapter= ArrayAdapter(this,android.R.layout.simple_list_item_1,contactList)
-        contactListView.adapter=contactAdapter
+        name = findViewById(R.id.name)
+        regNo = findViewById(R.id.regNo)
+        university = findViewById(R.id.university)
+        email = findViewById(R.id.email)
+        currentBalance = findViewById(R.id.currentBalance)
+        monthlyPocket = findViewById(R.id.monthlyPocket)
+        savings = findViewById(R.id.savings)
 
         loadProfileImage()
-        loadContacts()
+        updateProfileData { student ->
+            if(checkSession() && student != null){
+                name.text = student[0]
+                regNo.text = student[1]
+                university.text = student[2]
+                email.text = student[3]
+            } else {
+                Toast.makeText(this, "Failed to load Student data", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        updateBalances { balances ->
+            if(checkSession() && balances != null){
+                currentBalance.text = currentBalance.text.toString() + balances[4]
+                monthlyPocket.text = monthlyPocket.text.toString() + balances[5]
+                savings.text = savings.text.toString() + balances[6]
+            } else {
+                Toast.makeText(this, "Failed to load Balances data", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         profileImageView.setOnClickListener{
             val galleryIntent=Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             galleryLauncher.launch(galleryIntent)
         }
 
-        addContactButton.setOnClickListener{
-            if(ContextCompat.checkSelfPermission(this,Manifest.permission.READ_CONTACTS)
-                !=PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_CONTACTS),CONTACT_PICK_REQUEST)
-            }else{
-                pickContact()
-            }
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -154,28 +155,6 @@ class ProfileActivity :AppCompatActivity(){
         }
         else{
             return super.onBackPressed()
-        }
-    }
-
-    private fun pickContact(){
-        val contactPickerIntent=Intent(Intent.ACTION_PICK,ContactsContract.Contacts.CONTENT_URI)
-        contactLauncher.launch(contactPickerIntent)
-    }
-
-    private val contactLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val contactData: Uri? = result.data?.data
-            if (contactData != null) {
-                val cursor = contentResolver.query(contactData, null, null, null, null)
-                if (cursor != null && cursor.moveToFirst()) {
-                    val nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
-                    val contactName = cursor.getString(nameIndex)
-                    contactList.add(contactName)
-                    contactAdapter.notifyDataSetChanged()
-                    saveContacts()
-                    cursor.close()
-                }
-            }
         }
     }
 
@@ -205,18 +184,81 @@ class ProfileActivity :AppCompatActivity(){
             profileImageView.setImageResource(R.drawable.default_profile_image)  // Default image
         }
     }
-     private fun saveContacts() {
-        with(sharedPreferences.edit()) {
-            putStringSet(CONTACTS_KEY, contactList.toSet())
-            apply()
+
+    private fun checkSession(): Boolean {
+        val sharedPreference = getSharedPreferences("user_session", MODE_PRIVATE)
+        return sharedPreference.getBoolean("loggedIn", false)
+    }
+
+    private fun updateProfileData(callback: (Array<String?>?) -> Unit) {
+        if (checkSession()){
+            val sharedPreference = getSharedPreferences("user_session", MODE_PRIVATE)
+            val userId = sharedPreference.getString("userId", null)
+
+            if(userId != null){
+                val db = Firebase.firestore
+
+                db.collection("students")
+                    .document(userId)
+                    .get()
+                    .addOnSuccessListener { document ->
+                        if (document.exists()){
+                            studentArray[0] = document.getString("name")
+                            studentArray[1] = document.getString("regNo")
+                            studentArray[2] = document.getString("email")
+                            studentArray[3] =  document.getString("university")
+                            callback(studentArray)
+                        } else {
+                            Toast.makeText(this, "No data found for user", Toast.LENGTH_SHORT).show()
+                            callback(null)
+                        }
+                    }
+                    .addOnFailureListener(){
+                        Toast.makeText(this, "Error in Fetching Data", Toast.LENGTH_SHORT).show()
+                        callback(null)
+                    }
+            } else {
+                Toast.makeText(this, "Error in User Login", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Error in User Session", Toast.LENGTH_SHORT).show()
         }
     }
-    private fun loadContacts() {
-        val savedContacts = sharedPreferences.getStringSet(CONTACTS_KEY, emptySet())
-        if (savedContacts != null) {
-            contactList.clear()
-            contactList.addAll(savedContacts)
-            contactAdapter.notifyDataSetChanged()
+
+    private fun updateBalances(callback: (Array<String?>?) -> Unit) {
+        if (checkSession()){
+            val sharedPreference = getSharedPreferences("user_session", MODE_PRIVATE)
+            val userId = sharedPreference.getString("userId", null)
+
+            if(userId != null){
+                val db = Firebase.firestore
+                val studentRef = db.collection("students").document(userId)
+
+                db.collection("balance")
+                    .whereEqualTo("student_ref", studentRef)
+                    .get()
+                    .addOnSuccessListener(){document ->
+                        if (document.isEmpty){
+                            Toast.makeText(this, "Error in Fetching Data", Toast.LENGTH_SHORT).show()
+                            callback(null)
+                        } else {
+                            for (d in document.documents){
+                                studentArray[4] = d.getLong("currentBalance").toString()
+                                studentArray[5] = d.getLong("monthlyPocket").toString()
+                                studentArray[6] = d.getLong("savings").toString()
+                            }
+                            callback(studentArray)
+                        }
+                    }
+                    .addOnFailureListener(){
+                        Toast.makeText(this, "Error in Fetching Data", Toast.LENGTH_SHORT).show()
+                        callback(null)
+                    }
+            } else {
+                Toast.makeText(this, "Error in User Login", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Error in User Session", Toast.LENGTH_SHORT).show()
         }
     }
 }
