@@ -11,10 +11,15 @@ import android.net.Uri
 import android.app.Activity
 import android.content.SharedPreferences
 import android.content.Context
+import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -38,6 +43,7 @@ class ProfileActivity :AppCompatActivity(){
     private lateinit var currentBalance: TextView
     private lateinit var monthlyPocket: TextView
     private lateinit var savings: TextView
+    private lateinit var pocketButton: Button
     private lateinit var sharedPreferences: SharedPreferences
     private val studentArray : Array<String?> = arrayOf(null, null, null, null, null, null, null)
     private val PREF_NAME = "ProfilePrefs"
@@ -52,7 +58,7 @@ class ProfileActivity :AppCompatActivity(){
 
         navbar = findViewById(R.id.nav_view)
         drawerLayout = findViewById(R.id.myDrawerLayout)
-        actionBarDrawerToggle=ActionBarDrawerToggle(this,drawerLayout,R.string.nav_open,R.string.nav_close)
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
         drawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
 
@@ -111,6 +117,7 @@ class ProfileActivity :AppCompatActivity(){
         currentBalance = findViewById(R.id.currentBalance)
         monthlyPocket = findViewById(R.id.monthlyPocket)
         savings = findViewById(R.id.savings)
+        pocketButton = findViewById(R.id.updatePocket)
 
         loadProfileImage()
         updateProfileData { student ->
@@ -137,6 +144,10 @@ class ProfileActivity :AppCompatActivity(){
         profileImageView.setOnClickListener{
             val galleryIntent=Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             galleryLauncher.launch(galleryIntent)
+        }
+
+        pocketButton.setOnClickListener {
+            updatePocketMoney()
         }
     }
 
@@ -300,6 +311,70 @@ class ProfileActivity :AppCompatActivity(){
                         Toast.makeText(this, "Error in Fetching Data", Toast.LENGTH_SHORT).show()
                         callback(null)
                     }
+            } else {
+                Toast.makeText(this, "Error in User Login", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Error in User Session", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updatePocketMoney() {
+        if (checkSession()){
+            val sharedPreference = getSharedPreferences("user_session", MODE_PRIVATE)
+            val userId = sharedPreference.getString("userId", null)
+
+            if(userId != null){
+
+                val dialogBuilder = AlertDialog.Builder(this)
+                dialogBuilder.setTitle("Update Pocket Money")
+
+                val input = EditText(this)
+                input.inputType = InputType.TYPE_CLASS_NUMBER
+                input.hint = "Enter new pocket money"
+                dialogBuilder.setView(input)
+
+                dialogBuilder.setPositiveButton("Yes") { dialog, _ ->
+                    val pocketMoneyString = input.text.toString()
+
+                    if (pocketMoneyString.isNotEmpty()) {
+                        val pocketMoney = pocketMoneyString.toLong()
+
+                        val db = Firebase.firestore
+                        val studentRef = db.collection("students").document(userId)
+
+                        db.collection("balance")
+                            .whereEqualTo("student_ref", studentRef)
+                            .get()
+                            .addOnSuccessListener { querySnapshot ->
+                                if (!querySnapshot.isEmpty) {
+                                    for (document in querySnapshot.documents) {
+                                        document.reference.update("monthlyPocket", pocketMoney)
+                                            .addOnSuccessListener {
+                                                Toast.makeText(this, "Monthly pocket money updated successfully", Toast.LENGTH_SHORT).show()
+                                                monthlyPocket.text = monthlyPocket.text.toString() + pocketMoney.toString()
+                                            }
+                                            .addOnFailureListener {
+                                                Toast.makeText(this, "Error updating monthly pocket money", Toast.LENGTH_SHORT).show()
+                                            }
+                                    }
+                                } else {
+                                    Toast.makeText(this, "No Doc Found", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "No Doc Found", Toast.LENGTH_SHORT).show()
+                            }
+                    } else {
+                        Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+                dialogBuilder.setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.cancel()
+                }
+
+                dialogBuilder.create().show()
             } else {
                 Toast.makeText(this, "Error in User Login", Toast.LENGTH_SHORT).show()
             }

@@ -6,35 +6,26 @@
     android:id="@+id/myDrawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@color/white"
     tools:context=".ProfileActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary"
+        app:title="Profile"/>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:layout_marginTop="?attr/actionBarSize">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/primary">
-
-                <TextView
-                    android:id="@+id/toolbar_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:text="Profile"
-                    android:textSize="30sp"
-                    android:textColor="@android:color/white"
-                    android:fontFamily="@font/righteous" />
-
-            </androidx.appcompat.widget.Toolbar>
-
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -68,15 +59,17 @@
 
                 <TextView
                     android:id="@+id/regNo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="64dp"
+                    android:layout_height="31dp"
                     android:layout_below="@id/name"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="16dp"
+                    android:fontFamily="@font/lato_light_italic"
                     android:text="2241129"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/university"
@@ -86,9 +79,11 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="16dp"
                     android:text="Christ University, Banglore"
+                    android:fontFamily="@font/lato_light_italic"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/email"
@@ -98,10 +93,11 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="16dp"
                     android:text="yashmht44@gmail.com"
+                    android:fontFamily="@font/lato_light_italic"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
-
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
             </RelativeLayout>
 
             <LinearLayout
@@ -114,8 +110,6 @@
                     android:id="@+id/currentBalance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/university"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginBottom="16dp"
                     android:text="Current Balance : "
                     android:textAlignment="center"
@@ -126,10 +120,8 @@
                     android:id="@+id/monthlyPocket"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/university"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginBottom="16dp"
-                    android:text="Monthly Pocket Money : "
+                    android:text="Pocket Money : "
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
@@ -138,8 +130,6 @@
                     android:id="@+id/savings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/university"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginBottom="16dp"
                     android:text="Savings : "
                     android:textAlignment="center"
@@ -148,8 +138,21 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+            <Button
+                android:id="@+id/updatePocket"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:text="Update Pocket Money"
+                android:fontFamily="@font/lato_light_italic"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:layout_marginBottom="40dp"
+                android:padding="10dp"/>
 
+        </LinearLayout>
     </ScrollView>
 
     <com.google.android.material.navigation.NavigationView
