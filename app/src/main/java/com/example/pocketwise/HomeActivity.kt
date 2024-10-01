@@ -15,6 +15,8 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 
 class HomeActivity : AppCompatActivity() {
+    private lateinit var currentPocketMoney: TextView
+    private lateinit var oweAmount: TextView
     private lateinit var toolbar: Toolbar
     private lateinit var navbar: NavigationView
     private lateinit var drawerLayout: DrawerLayout
@@ -54,22 +56,14 @@ class HomeActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
 
-        val currentPocketMoney = findViewById<TextView>(R.id.currentPocketMoney)
-        currentPocketMoney.text = "Pocket Money: $500"
-
-        val oweAmount = findViewById<TextView>(R.id.oweAmount)
-        oweAmount.text = "Owe: -$100"
+        currentPocketMoney = findViewById(R.id.currentPocketMoney)
+        oweAmount = findViewById(R.id.oweAmount)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         navbar.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.home_nav_menu -> {
                     val intent = Intent(this, HomeActivity::class.java)
-                    startActivity(intent)
-                }
-
-                R.id.summary_nav_menu -> {
-                    val intent = Intent(this, SummaryActivity::class.java)
                     startActivity(intent)
                 }
 

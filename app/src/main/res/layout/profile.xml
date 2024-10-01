@@ -9,23 +9,24 @@
     android:backgroundTint="@color/white"
     tools:context=".ProfileActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/primary"
-        app:title="Profile"/>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:layout_marginTop="?attr/actionBarSize">
+        android:fitsSystemWindows="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="Profile"
+                android:background="@color/primary"
+                app:titleTextColor="@color/white" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -159,8 +160,10 @@
         android:id="@+id/nav_view"
         android:layout_width="280dp"
         android:layout_height="match_parent"
-        android:background="@color/secondary"
+        android:background="@color/primary"
         android:layout_gravity="start"
+        android:layout_marginTop="35dp"
+        app:itemTextColor="@color/black"
         app:menu="@menu/my_drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

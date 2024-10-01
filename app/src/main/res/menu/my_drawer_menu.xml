@@ -1,24 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:title="Home"
-        android:id="@+id/home_nav_menu" />
-    <item
-        android:title="Summary"
-        android:id="@+id/summary_nav_menu"/>
-    <item
-        android:title="History"
-        android:id="@+id/history_nav_menu"/>
-    <item
-        android:title="Expense"
-        android:id="@+id/expense_nav_menu"/>
-    <item
-        android:title="IOweU"
-        android:id="@+id/ioweu_nav_menu"/>
-    <item
-        android:title="Profile"
-        android:id="@+id/profile_nav_menu"/>
-    <item
-        android:title="Logout"
-        android:id="@+id/logout_nav_menu"/>
+
+    <group android:checkableBehavior="single">
+        <item android:title="Personal Info">
+            <menu>
+                <item android:id="@+id/home_nav_menu"
+                    android:title="Home"
+                    android:icon="@drawable/home" />
+
+                <item android:id="@+id/profile_nav_menu"
+                    android:title="Profile"
+                    android:icon="@drawable/account" />
+
+            </menu>
+        </item>
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item android:title="Transactions">
+            <menu>
+                <item android:id="@+id/history_nav_menu"
+                    android:title="History"
+                    android:icon="@drawable/history" />
+
+                <item android:id="@+id/expense_nav_menu"
+                    android:title="Expenses"
+                    android:icon="@drawable/expenses" />
+
+                <item android:id="@+id/ioweu_nav_menu"
+                    android:title="Owe/Receivable"
+                    android:icon="@drawable/wallet" />
+            </menu>
+        </item>
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item android:title="Others">
+            <menu>
+                <item android:id="@+id/logout_nav_menu"
+                    android:title="Logout"
+                    android:icon="@drawable/logout" />
+            </menu>
+        </item>
+    </group>
 </menu>

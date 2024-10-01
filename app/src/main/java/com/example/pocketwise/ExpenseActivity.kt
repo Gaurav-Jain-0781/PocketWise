@@ -80,11 +80,6 @@ class ExpenseActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
 
-                R.id.summary_nav_menu -> {
-                    val intent = Intent(this, SummaryActivity::class.java)
-                    startActivity(intent)
-                }
-
                 R.id.history_nav_menu -> {
                     val intent = Intent(this, HistoryActivity::class.java)
                     startActivity(intent)
