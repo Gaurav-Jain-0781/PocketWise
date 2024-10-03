@@ -16,7 +16,6 @@ import com.google.android.material.navigation.NavigationView
 
 class HistoryActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
-    private lateinit var toolbar_title: TextView
     private lateinit var navbar: NavigationView
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
@@ -49,12 +48,9 @@ class HistoryActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        toolbar_title=findViewById(R.id.toolbar_title)
-        toolbar_title.text="History"
-
         navbar = findViewById(R.id.nav_view)
         drawerLayout = findViewById(R.id.myDrawerLayout)
-        actionBarDrawerToggle=ActionBarDrawerToggle(this,drawerLayout,R.string.nav_open,R.string.nav_close)
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
         drawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
 

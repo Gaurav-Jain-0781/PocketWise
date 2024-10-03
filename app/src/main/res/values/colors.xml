@@ -6,4 +6,6 @@
     <color name="secondary">#CEDF9F</color>
     <color name="other">#F1F3C2</color>
     <color name="background">#E8B86D</color>
+    <color name="expense">#EC5858</color>
+    <color name="income">#009688</color>
 </resources>
