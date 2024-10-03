@@ -347,7 +347,7 @@ class ProfileActivity :AppCompatActivity(){
                                         document.reference.update("monthlyPocket", pocketMoney)
                                             .addOnSuccessListener {
                                                 Toast.makeText(this, "Monthly pocket money updated successfully", Toast.LENGTH_SHORT).show()
-                                                monthlyPocket.text = monthlyPocket.text.toString() + pocketMoney.toString()
+                                                monthlyPocket.text = "Pocket Money : $pocketMoney"
                                             }
                                             .addOnFailureListener {
                                                 Toast.makeText(this, "Error updating monthly pocket money", Toast.LENGTH_SHORT).show()

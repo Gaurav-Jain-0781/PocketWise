@@ -16,6 +16,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.firestore
 import java.util.*
 import kotlin.collections.HashMap
@@ -190,6 +191,7 @@ class ExpenseActivity : AppCompatActivity() {
                 transactionDocRef.set(transactionHashMap)
                     .addOnSuccessListener {
                         Toast.makeText(this, "Expense Added Successful", Toast.LENGTH_LONG).show()
+                        updateBalance(studentRef, amount.toLong())
                         val intent = Intent(this, HomeActivity::class.java)
                         startActivity(intent)
                         finish()
@@ -205,5 +207,35 @@ class ExpenseActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Error in User Session", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun updateBalance(studentRef: DocumentReference, amount: Long){
+        val db = Firebase.firestore
+
+        db.collection("balance")
+            .whereEqualTo("student_ref", studentRef)
+            .get()
+            .addOnSuccessListener { document ->
+                if (!document.isEmpty) {
+                    val d = document.documents[0]
+                    val balanceRef = d.reference
+                    val currentBalance = d.getLong("currentBalance")
+
+                    if (currentBalance != null) {
+                        balanceRef.update("currentBalance", currentBalance-amount)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Balance updated successfully", Toast.LENGTH_SHORT).show()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "Error updating balance", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                } else {
+                    Toast.makeText(this, "No balance document found for the student", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Error fetching balance", Toast.LENGTH_SHORT).show()
+            }
     }
 }

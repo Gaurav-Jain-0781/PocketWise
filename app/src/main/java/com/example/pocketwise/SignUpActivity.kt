@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.firestore
 
 class SignUpActivity : AppCompatActivity() {
@@ -82,6 +83,27 @@ class SignUpActivity : AppCompatActivity() {
         val userDocRef = db.collection("students").document()
 
         userDocRef.set(userMap)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Student Details Added Successful", Toast.LENGTH_LONG).show()
+                insertBalance(userDocRef)
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Registration Failed: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun insertBalance(studentRef: DocumentReference){
+        val balanceMap = hashMapOf(
+            "currentBalance" to 0,
+            "monthlyPocket" to 0,
+            "savings" to 0,
+            "student_ref" to studentRef,
+        )
+
+        val db = Firebase.firestore
+        val userDocRef = db.collection("balance").document()
+
+        userDocRef.set(balanceMap)
             .addOnSuccessListener {
                 Toast.makeText(this, "Registration Successful", Toast.LENGTH_LONG).show()
                 val intent = Intent(this, LoginActivity::class.java)
