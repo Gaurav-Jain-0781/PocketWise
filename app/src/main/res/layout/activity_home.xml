@@ -96,7 +96,8 @@
                         android:layout_margin="15dp"
                         android:text="+"
                         android:textSize="50sp"
-                        android:background="@drawable/oval_background"/>
+                        android:background="@drawable/oval_background"
+                        android:backgroundTint="@color/primary"/>
                 </LinearLayout>
 
                 <ProgressBar
@@ -122,29 +123,71 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:elevation="4dp"
+                    android:padding="10dp"
                     android:layout_marginBottom="16dp">
 
-                    <TextView
-                        android:id="@+id/previousMonthSavings"
-                        android:layout_width="135dp"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Previous Month's Savings: $200"
-                        android:background="@drawable/home_widget_background"
-                        android:textColor="#000"
-                        android:textSize="20sp"
-                        android:layout_marginEnd="20dp"/>
+                        android:orientation="vertical"
+                        android:layout_marginEnd="15dp"
+                        android:padding="20dp"
+                        android:background="@drawable/rounded_corner_sec">
 
-                    <TextView
-                        android:id="@+id/totalYearlySavings"
-                        android:layout_width="135dp"
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_light_italic"
+                            android:gravity="center"
+                            android:text="Last Savings"
+                            android:textColor="#000000"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_light_italic"
+                            android:gravity="center"
+                            android:text="20"
+                            android:textColor="#000000"
+                            android:textSize="60sp"
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total Yearly Savings: $1500"
-                        android:background="@drawable/home_widget_background"
-                        android:textColor="#000"
-                        android:textSize="18sp"
-                        android:layout_marginTop="8dp" />
+                        android:orientation="vertical"
+                        android:layout_marginStart="15dp"
+                        android:padding="20dp"
+                        android:background="@drawable/rounded_corner_sec">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_light_italic"
+                            android:gravity="center"
+                            android:text="Total Savings"
+                            android:textColor="#000000"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_light_italic"
+                            android:gravity="center"
+                            android:text="10"
+                            android:textColor="#000000"
+                            android:textSize="60sp"
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <TextView
@@ -160,54 +203,153 @@
                     android:id="@+id/expenseAnalyticsSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/home_widget_background"
-                    android:padding="16dp"
-                    android:elevation="4dp"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
                     android:layout_marginBottom="16dp">
 
-                    <TextView
-                        android:id="@+id/dailyAverageExpense"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Daily Average Expense: $15"
-                        android:textColor="#000"
-                        android:textSize="20sp" />
-                    <TextView
-                        android:id="@+id/totalExpense"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="20dp"
+                        android:padding="20dp"
+                        android:background="@drawable/rounded_corner_sec">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_light_italic"
+                            android:gravity="center"
+                            android:text="Avg Expense"
+                            android:textColor="#000000"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_light_italic"
+                            android:gravity="center"
+                            android:text="20"
+                            android:textColor="#000000"
+                            android:textSize="60sp"
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total Expense: $150"
-                        android:textColor="#000"
-                        android:textSize="20sp" />
+                        android:orientation="vertical"
+                        android:layout_marginStart="20dp"
+                        android:padding="20dp"
+                        android:background="@drawable/rounded_corner_sec">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_light_italic"
+                            android:gravity="center"
+                            android:text="Total Expense"
+                            android:textColor="#000000"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_light_italic"
+                            android:gravity="center"
+                            android:text="10"
+                            android:textColor="#000000"
+                            android:textSize="60sp"
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
+
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Suggestions"
+                    android:textColor="@android:color/black"
+                    android:paddingHorizontal="16dp"
+                    android:textSize="30sp"
+                    android:fontFamily="@font/dosis_medium"/>
 
                 <LinearLayout
                     android:id="@+id/suggestionsSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/home_widget_background"
-                    android:padding="16dp"
-                    android:elevation="4dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="16dp">
 
-                    <TextView
-                        android:id="@+id/suggestionsTitle"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Suggestions Based on Your Spending"
-                        android:textColor="#000"
-                        android:textSize="18sp" />
+                        android:orientation="vertical"
+                        android:layout_marginBottom="20dp"
+                        android:padding="20dp"
+                        android:background="@drawable/rounded_corner_sec">
 
-                    <TextView
-                        android:id="@+id/savingSuggestion"
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_light_italic"
+                            android:gravity="center"
+                            android:text="1. Consider reducing Entertainment spending by $50 next month."
+                            android:textColor="#000000"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Consider reducing Entertainment spending by $50 next month."
-                        android:textColor="#000"
-                        android:textSize="16sp"
-                        android:layout_marginTop="8dp" />
+                        android:orientation="vertical"
+                        android:padding="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/rounded_corner_sec">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_light_italic"
+                            android:gravity="center"
+                            android:text="2. Limit dining out to twice a week to save an extra $30."
+                            android:textColor="#000000"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp"
+                        android:background="@drawable/rounded_corner_sec">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_light_italic"
+                            android:gravity="center"
+                            android:text="3. Increase your savings by allocating an additional $40 to your emergency fund next month."
+                            android:textColor="#000000"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
