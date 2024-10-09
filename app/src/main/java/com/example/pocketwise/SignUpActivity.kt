@@ -97,6 +97,8 @@ class SignUpActivity : AppCompatActivity() {
             "currentBalance" to 0,
             "monthlyPocket" to 0,
             "savings" to 0,
+            "lent" to 0,
+            "borrowed" to 0,
             "student_ref" to studentRef,
         )
 

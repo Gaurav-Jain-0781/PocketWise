@@ -152,7 +152,6 @@ class IOweUActivity : AppCompatActivity() {
         category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 selectedCategory = parent.getItemAtPosition(position) as String
-                Toast.makeText(this@IOweUActivity, "Selected: $selectedCategory", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -211,9 +210,8 @@ class IOweUActivity : AppCompatActivity() {
                         startActivity(intent)
                         finish()
                     }
-
                     .addOnFailureListener {e ->
-                        Toast.makeText(this, "Registration Failed: ${e.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "Error in recording Owings: ${e.message}", Toast.LENGTH_LONG).show()
                         return@addOnFailureListener
                     }
             } else {
@@ -233,7 +231,6 @@ class IOweUActivity : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 if(!document.isEmpty){
                     val d=document.documents[0]
-                    Log.d("BalanceUpdate", "Document fetched: ${document.documents[0].data}")
                     val balanceRef=d.reference
                     val lent=d.getLong("lent")
                     val borrowed=d.getLong("borrowed")
