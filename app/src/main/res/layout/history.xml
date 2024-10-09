@@ -30,7 +30,7 @@
                 app:titleTextColor="@color/white" />
 
             <LinearLayout
-                android:id="@+id/tableparent"
+                android:id="@+id/historyParent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -54,13 +54,10 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/white"
                         android:orientation="horizontal"
-                        android:padding="16dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:padding="16dp">
 
                         <ImageView
-                            android:id="@+id/profileImage"
+                            android:id="@+id/categoryImage"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_gravity="center_vertical"
@@ -76,7 +73,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/notificationTitle"
+                                android:id="@+id/expenseTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Food and Drinks"
@@ -165,7 +162,6 @@
                             android:textColor="@color/expense" />
 
                     </LinearLayout>
-
 
                     <LinearLayout
                         android:layout_width="match_parent"

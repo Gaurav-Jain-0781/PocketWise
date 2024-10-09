@@ -238,30 +238,31 @@ class IOweUActivity : AppCompatActivity() {
                     val lent=d.getLong("lent")
                     val borrowed=d.getLong("borrowed")
 
-                    val updates = mutableMapOf<String, Any>()
-
                     if (selectedCategory == "Lent") {
                         if (lent != null) {
-                            updates["lent"] = lent + amount
+                            balanceRef.update("lent", lent+amount)
+                                .addOnSuccessListener {
+                                    Toast.makeText(this, "Balance updated successfully", Toast.LENGTH_SHORT).show()
+                                }
+                                .addOnFailureListener { exception ->
+                                    Toast.makeText(this, "Failed to update balance: ${exception.message}", Toast.LENGTH_SHORT).show()
+                                }
                         }
                     } else if (selectedCategory == "Borrowed") {
                         if (borrowed != null) {
-                            updates["borrowed"] = borrowed + amount
+                            balanceRef.update("borrowed", borrowed+amount)
+                                .addOnSuccessListener {
+                                    Toast.makeText(this, "Balance updated successfully", Toast.LENGTH_SHORT).show()
+                                }
+                                .addOnFailureListener { exception ->
+                                    Toast.makeText(this, "Failed to update balance: ${exception.message}", Toast.LENGTH_SHORT).show()
+                                }
                         }
                     }
-
-                    balanceRef.update(updates)
-                        .addOnSuccessListener {
-                            Toast.makeText(this, "Balance updated successfully", Toast.LENGTH_SHORT).show()
-                        }
-                        .addOnFailureListener { exception ->
-                            Toast.makeText(this, "Failed to update balance: ${exception.message}", Toast.LENGTH_SHORT).show()
-                        }
                 } else {
                     Toast.makeText(this, "No balance document found for the student", Toast.LENGTH_SHORT).show()
                 }
             }
-
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error fetching balance", Toast.LENGTH_SHORT).show()
             }

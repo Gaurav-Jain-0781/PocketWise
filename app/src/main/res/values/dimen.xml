@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="date_padding">20dp</dimen>
+    <dimen name="expense_margin">16dp</dimen>
+    <dimen name="expense_padding">10dp</dimen>
+    <dimen name="image_size">50dp</dimen>
+    <dimen name="image_margin_end">16dp</dimen>
+</resources>

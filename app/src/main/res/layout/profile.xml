@@ -61,8 +61,8 @@
 
                 <TextView
                     android:id="@+id/regNo"
-                    android:layout_width="64dp"
-                    android:layout_height="31dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_below="@id/name"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="16dp"
@@ -165,6 +165,8 @@
         android:layout_gravity="start"
         android:layout_marginTop="35dp"
         app:itemTextColor="@color/black"
-        app:menu="@menu/my_drawer_menu" />
+        app:menu="@menu/my_drawer_menu">
+
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>
