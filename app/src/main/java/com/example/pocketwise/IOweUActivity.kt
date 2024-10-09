@@ -1,9 +1,18 @@
 package com.example.pocketwise
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -13,6 +22,11 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.firestore
+import java.util.Calendar
 
 class IOweUActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
@@ -20,6 +34,18 @@ class IOweUActivity : AppCompatActivity() {
     private lateinit var navbar: NavigationView
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    private lateinit var amount: EditText
+    private lateinit var friend:EditText
+    private lateinit var category: Spinner
+    private lateinit var dateText: TextView
+    private lateinit var datearrow: ImageView
+    private lateinit var notes: EditText
+    private lateinit var owingsButton: Button
+    private var selectedCategory = ""
+
+    private val categories = listOf(
+        "Borrowed", "Lent"
+    )
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -96,5 +122,148 @@ class IOweUActivity : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+
+        amount = findViewById(R.id.owe_amount)
+        friend=findViewById(R.id.friend_name)
+        category = findViewById(R.id.category_spinner)
+        dateText = findViewById(R.id.owe_date)
+        datearrow = findViewById(R.id.change_date_arrow)
+        notes = findViewById(R.id.owe_note)
+        owingsButton = findViewById(R.id.add_owings)
+
+        setupCategoryDropdown()
+
+        datearrow.setOnClickListener {
+            showDatePickerDialog()
+        }
+
+        owingsButton.setOnClickListener(){
+            addOwings()
+        }
+    }
+
+    private fun setupCategoryDropdown() {
+        val adapter = ArrayAdapter(this, R.layout.expense_category_item, categories)
+        adapter.setDropDownViewResource(R.layout.expense_category_dropdown)
+        category.adapter = adapter
+        val defaultCategoryPosition = categories.indexOf("Borrowed")
+        category.setSelection(defaultCategoryPosition)
+
+        category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                selectedCategory = parent.getItemAtPosition(position) as String
+                Toast.makeText(this@IOweUActivity, "Selected: $selectedCategory", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+
+            }
+        }
+    }
+
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+            dateText.text = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+        }, year, month, day)
+
+        datePickerDialog.show()
+    }
+
+    private fun checkSession(): Boolean {
+        val sharedPreference = getSharedPreferences("user_session", MODE_PRIVATE)
+        return sharedPreference.getBoolean("loggedIn", false)
+    }
+
+    private fun addOwings(){
+        if(checkSession()){
+            val sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE)
+            val userId = sharedPreferences.getString("userId",null)
+
+            if(userId!=null){
+                val db = Firebase.firestore
+                val studentRef=db.collection("students").document(userId)
+                val note=notes.text.toString()
+                val amount=amount.text.toString()
+                val currentDate=Timestamp.now()
+                val friend=friend.text.toString()
+
+                val oweHashMap= hashMapOf(
+                    "category" to selectedCategory,
+                    "note" to note,
+                    "amount" to amount.toLong(),
+                    "date" to currentDate,
+                    "friends" to friend,
+                    "user_ref" to studentRef
+                )
+
+                val owingsDocRef=db.collection("owings").document()
+
+                owingsDocRef.set(oweHashMap)
+                    .addOnSuccessListener {
+                        Toast.makeText(this,"Owings added Successfully",Toast.LENGTH_LONG).show()
+                        updateBalance(studentRef,amount.toLong(),selectedCategory)
+                        val intent = Intent(this, HomeActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+
+                    .addOnFailureListener {e ->
+                        Toast.makeText(this, "Registration Failed: ${e.message}", Toast.LENGTH_LONG).show()
+                        return@addOnFailureListener
+                    }
+            } else {
+                Toast.makeText(this, "Error in User Login", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Error in User Session", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateBalance(studentRef:DocumentReference,amount:Long,selectedCategory:String){
+        val db = Firebase.firestore
+
+        db.collection("balance")
+            .whereEqualTo("student_ref",studentRef)
+            .get()
+            .addOnSuccessListener { document ->
+                if(!document.isEmpty){
+                    val d=document.documents[0]
+                    Log.d("BalanceUpdate", "Document fetched: ${document.documents[0].data}")
+                    val balanceRef=d.reference
+                    val lent=d.getLong("lent")
+                    val borrowed=d.getLong("borrowed")
+
+                    val updates = mutableMapOf<String, Any>()
+
+                    if (selectedCategory == "Lent") {
+                        if (lent != null) {
+                            updates["lent"] = lent + amount
+                        }
+                    } else if (selectedCategory == "Borrowed") {
+                        if (borrowed != null) {
+                            updates["borrowed"] = borrowed + amount
+                        }
+                    }
+
+                    balanceRef.update(updates)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Balance updated successfully", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { exception ->
+                            Toast.makeText(this, "Failed to update balance: ${exception.message}", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    Toast.makeText(this, "No balance document found for the student", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Error fetching balance", Toast.LENGTH_SHORT).show()
+            }
     }
 }
