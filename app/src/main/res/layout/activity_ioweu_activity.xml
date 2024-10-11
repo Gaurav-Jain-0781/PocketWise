@@ -215,7 +215,7 @@
             android:fontFamily="@font/dosis_medium"/>
 
         <LinearLayout
-            android:id="@+id/tableparent"
+            android:id="@+id/owingsParent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"

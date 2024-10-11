@@ -2,8 +2,10 @@ package com.example.pocketwise
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -12,6 +14,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -19,6 +22,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
@@ -26,9 +31,21 @@ import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
+
+data class OwingsEntry(
+    val category: String= "",
+    val note: String= "",
+    val amount: Long? = null,
+    val date: Timestamp?= null,
+    val friends: String= "",
+)
 
 class IOweUActivity : AppCompatActivity() {
+    private lateinit var owingLayout: LinearLayout
     private lateinit var toolbar: Toolbar
     private lateinit var toolbar_title: TextView
     private lateinit var navbar: NavigationView
@@ -140,6 +157,167 @@ class IOweUActivity : AppCompatActivity() {
         owingsButton.setOnClickListener(){
             addOwings()
         }
+
+        owingLayout=findViewById(R.id.owingsParent)
+        getOwings()
+    }
+
+    private fun getOwings(){
+        if(checkSession()){
+            val sharedPreferences=getSharedPreferences("user_session", MODE_PRIVATE)
+            val userId=sharedPreferences.getString("userId",null)
+
+            if(userId!==null){
+                val db=Firebase.firestore
+                val userRef=db.collection("students").document(userId)
+
+                db.collection("owings")
+                    .whereEqualTo("user_ref",userRef)
+                    .get()
+                    .addOnSuccessListener { documents->
+                        val owingsByDate= mutableMapOf<String,MutableList<OwingsEntry>>()
+                        val dateFormatter= SimpleDateFormat("dd MMMM yyyy",Locale.getDefault())
+
+                        for(document in documents){
+                            val ownings=document.toObject(OwingsEntry::class.java)
+                            val owningsDateFormatted= ownings.date?.let { dateFormatter.format(it.toDate()) }?:"Unknown Date"
+
+                            val formattedOwings = OwingsEntry(
+                                category=ownings.category,
+                                note=ownings.note,
+                                amount=ownings.amount,
+                                date=ownings.date,
+                                friends=ownings.friends,
+                            )
+
+                            owingsByDate.getOrPut(owningsDateFormatted){ mutableListOf()}.add(formattedOwings)
+                        }
+                        displayOwingsByDate(owingsByDate)
+                    }
+                    .addOnFailureListener{exception->
+                        Toast.makeText(this, "Error in Logs", Toast.LENGTH_SHORT).show()
+                        Log.w("Firestore", "Error getting documents: ", exception)
+                    }
+            } else {
+                Toast.makeText(this, "Error in User Login", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Error Loading Photo", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun displayOwingsByDate(owingsByDate: Map<String, List<OwingsEntry>>) {
+        owingLayout.removeAllViews()
+
+        val datePadding = resources.getDimensionPixelSize(R.dimen.date_padding)
+        val owingsMargin = resources.getDimensionPixelSize(R.dimen.expense_margin)
+        val owingsPadding = resources.getDimensionPixelSize(R.dimen.expense_padding)
+        val imageSize = resources.getDimensionPixelSize(R.dimen.image_size)
+        val imageMarginEnd = resources.getDimensionPixelSize(R.dimen.image_margin_end)
+
+        for ((date, owings) in owingsByDate) {
+            val dateTextView = TextView(this).apply {
+                text = date
+                setPadding(datePadding, datePadding, datePadding, datePadding)
+                gravity = Gravity.START
+                setTextColor(ContextCompat.getColor(context, R.color.black))
+                typeface = ResourcesCompat.getFont(context, R.font.lato_light_italic)
+                setTypeface(typeface, Typeface.BOLD)
+            }
+            owingLayout.addView(dateTextView)
+
+            for (owing in owings) {
+                val horizontalLayout = LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    setBackgroundColor(ContextCompat.getColor(context, android.R.color.white))
+                    setPadding(owingsPadding, owingsPadding, owingsPadding, owingsPadding)
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                }
+
+                val imageView = ImageView(this).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        imageSize,
+                        imageSize
+                    ).apply {
+                        gravity = Gravity.CENTER_VERTICAL
+                        marginEnd = imageMarginEnd
+                    }
+                    scaleType = ImageView.ScaleType.CENTER_CROP
+                    setImageResource(R.drawable.account)
+                    background = ContextCompat.getDrawable(context, R.drawable.circular_background)
+                }
+
+                val verticalLayout = LinearLayout(this).apply {
+                    orientation = LinearLayout.VERTICAL
+                    layoutParams = LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1f
+                    )
+                }
+
+                val titleTextView = TextView(this).apply {
+                    text = owing.friends
+                    textSize = 22f
+                    setTypeface(null, Typeface.BOLD)
+                    setTextColor(ContextCompat.getColor(context, R.color.black))
+                    gravity = Gravity.START
+                    typeface = ResourcesCompat.getFont(context, R.font.lato_light_italic)
+                }
+
+                val messageTextView = TextView(this).apply {
+                    text = owing.note
+                    textSize = 16f
+                    setTextColor(ContextCompat.getColor(context, R.color.black))
+                    gravity = Gravity.START
+                    typeface = ResourcesCompat.getFont(context, R.font.lato_light_italic)
+                }
+
+                val verticalAmountLayout = LinearLayout(this).apply {
+                    orientation = LinearLayout.VERTICAL
+                    layoutParams = LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1f
+                    )
+                }
+
+                val categoryTextView = TextView(this).apply {
+                    text = owing.category
+                    textSize = 16f
+                    setTypeface(null, Typeface.BOLD)
+                    setTextColor(ContextCompat.getColor(context, R.color.black))
+                    gravity = Gravity.END
+                    typeface = ResourcesCompat.getFont(context, R.font.lato_light_italic)
+                }
+
+                val amountTextView = TextView(this).apply {
+                    if(owing.category=="Lent"){
+                        text="- ₹${owing.amount}"
+                        setTextColor(ContextCompat.getColor(context, R.color.income))
+                    }else {
+                        text = "+ ₹${owing.amount}"
+                        setTextColor(ContextCompat.getColor(context, R.color.expense))
+                    }
+                    textSize = 25f
+                    gravity = Gravity.END
+                }
+
+                verticalLayout.addView(titleTextView)
+                verticalLayout.addView(messageTextView)
+                verticalAmountLayout.addView(categoryTextView)
+                verticalAmountLayout.addView(amountTextView)
+
+                horizontalLayout.addView(imageView)
+                horizontalLayout.addView(verticalLayout)
+                horizontalLayout.addView(verticalAmountLayout)
+
+                owingLayout.addView(horizontalLayout)
+            }
+        }
     }
 
     private fun setupCategoryDropdown() {
@@ -234,6 +412,7 @@ class IOweUActivity : AppCompatActivity() {
                     val balanceRef=d.reference
                     val lent=d.getLong("lent")
                     val borrowed=d.getLong("borrowed")
+                    val currentBalance = d.getLong("currentBalance")
 
                     if (selectedCategory == "Lent") {
                         if (lent != null) {
@@ -244,6 +423,16 @@ class IOweUActivity : AppCompatActivity() {
                                 .addOnFailureListener { exception ->
                                     Toast.makeText(this, "Failed to update balance: ${exception.message}", Toast.LENGTH_SHORT).show()
                                 }
+
+                            if (currentBalance != null) {
+                                balanceRef.update("currentBalance", currentBalance-amount)
+                                    .addOnSuccessListener {
+                                        Toast.makeText(this, "Balance updated successfully", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener {
+                                        Toast.makeText(this, "Error updating balance", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
                         }
                     } else if (selectedCategory == "Borrowed") {
                         if (borrowed != null) {
@@ -254,6 +443,16 @@ class IOweUActivity : AppCompatActivity() {
                                 .addOnFailureListener { exception ->
                                     Toast.makeText(this, "Failed to update balance: ${exception.message}", Toast.LENGTH_SHORT).show()
                                 }
+
+                            if (currentBalance != null) {
+                                balanceRef.update("currentBalance", currentBalance+amount)
+                                    .addOnSuccessListener {
+                                        Toast.makeText(this, "Balance updated successfully", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener {
+                                        Toast.makeText(this, "Error updating balance", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
                         }
                     }
                 } else {

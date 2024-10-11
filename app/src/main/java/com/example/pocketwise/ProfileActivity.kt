@@ -44,6 +44,7 @@ class ProfileActivity :AppCompatActivity(){
     private lateinit var monthlyPocket: TextView
     private lateinit var savings: TextView
     private lateinit var pocketButton: Button
+    private lateinit var savingsButton: Button
     private lateinit var sharedPreferences: SharedPreferences
     private val studentArray : Array<String?> = arrayOf(null, null, null, null, null, null, null)
     private val PREF_NAME = "ProfilePrefs"
@@ -113,6 +114,7 @@ class ProfileActivity :AppCompatActivity(){
         monthlyPocket = findViewById(R.id.monthlyPocket)
         savings = findViewById(R.id.savings)
         pocketButton = findViewById(R.id.updatePocket)
+        savingsButton=findViewById(R.id.updateSavings)
 
         loadProfileImage()
         updateProfileData { student ->
@@ -143,6 +145,10 @@ class ProfileActivity :AppCompatActivity(){
 
         pocketButton.setOnClickListener {
             updatePocketMoney()
+        }
+
+        savingsButton.setOnClickListener {
+            updateSavingsMoney()
         }
     }
 
@@ -351,6 +357,70 @@ class ProfileActivity :AppCompatActivity(){
                                             }
                                             .addOnFailureListener {
                                                 Toast.makeText(this, "Error updating monthly pocket money", Toast.LENGTH_SHORT).show()
+                                            }
+                                    }
+                                } else {
+                                    Toast.makeText(this, "No Doc Found", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "No Doc Found", Toast.LENGTH_SHORT).show()
+                            }
+                    } else {
+                        Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+                dialogBuilder.setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.cancel()
+                }
+
+                dialogBuilder.create().show()
+            } else {
+                Toast.makeText(this, "Error in User Login", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Error in User Session", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateSavingsMoney() {
+        if (checkSession()){
+            val sharedPreference = getSharedPreferences("user_session", MODE_PRIVATE)
+            val userId = sharedPreference.getString("userId", null)
+
+            if(userId != null){
+
+                val dialogBuilder = AlertDialog.Builder(this)
+                dialogBuilder.setTitle("Update Your Till Date Savings")
+
+                val input = EditText(this)
+                input.inputType = InputType.TYPE_CLASS_NUMBER
+                input.hint = "Enter Total Savings"
+                dialogBuilder.setView(input)
+
+                dialogBuilder.setPositiveButton("Yes") { dialog, _ ->
+                    val savingsMoneyString = input.text.toString()
+
+                    if (savingsMoneyString.isNotEmpty()) {
+                        val savingsMoney = savingsMoneyString.toLong()
+
+                        val db = Firebase.firestore
+                        val studentRef = db.collection("students").document(userId)
+
+                        db.collection("balance")
+                            .whereEqualTo("student_ref", studentRef)
+                            .get()
+                            .addOnSuccessListener { querySnapshot ->
+                                if (!querySnapshot.isEmpty) {
+                                    for (document in querySnapshot.documents) {
+                                        document.reference.update("savings", savingsMoney)
+                                            .addOnSuccessListener {
+                                                Toast.makeText(this, "Total savings updated successfully", Toast.LENGTH_SHORT).show()
+                                                savings.text = "Total Savings : $savingsMoney"
+                                            }
+                                            .addOnFailureListener {
+                                                Toast.makeText(this, "Error updating Total savings", Toast.LENGTH_SHORT).show()
                                             }
                                     }
                                 } else {
