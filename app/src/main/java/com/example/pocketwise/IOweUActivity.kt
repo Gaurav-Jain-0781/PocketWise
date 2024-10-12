@@ -246,7 +246,7 @@ class IOweUActivity : AppCompatActivity() {
                         marginEnd = imageMarginEnd
                     }
                     scaleType = ImageView.ScaleType.CENTER_CROP
-                    setImageResource(R.drawable.account)
+                    setImageResource(R.drawable.borrow_icon)
                     background = ContextCompat.getDrawable(context, R.drawable.circular_background)
                 }
 
@@ -296,10 +296,10 @@ class IOweUActivity : AppCompatActivity() {
 
                 val amountTextView = TextView(this).apply {
                     if(owing.category=="Lent"){
-                        text="- ₹${owing.amount}"
+                        text="₹${owing.amount}"
                         setTextColor(ContextCompat.getColor(context, R.color.income))
                     }else {
-                        text = "+ ₹${owing.amount}"
+                        text = "₹${owing.amount}"
                         setTextColor(ContextCompat.getColor(context, R.color.expense))
                     }
                     textSize = 25f
