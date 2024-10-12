@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -109,9 +110,7 @@ class ExpenseActivity : AppCompatActivity() {
                 }
 
                 R.id.logout_nav_menu -> {
-                    Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, LoginActivity::class.java)
-                    startActivity(intent)
+                    logout()
                 }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -243,5 +242,31 @@ class ExpenseActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error fetching balance", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun logout() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Do you want to logout?")
+
+        builder.setTitle("ALERT!")
+        builder.setCancelable(false)
+
+        builder.setPositiveButton("Yes") { _, _ ->
+            val sharedPreferences = getSharedPreferences("user_session", MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.clear()
+            editor.apply()
+
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
+
+        builder.setNegativeButton("No") {
+                dialog, which -> dialog.cancel()
+        }
+
+        val alertDialog = builder.create()
+        alertDialog.show()
     }
 }
