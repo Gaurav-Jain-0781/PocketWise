@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -17,6 +18,7 @@ import com.google.android.material.navigation.NavigationView
 class HomeActivity : AppCompatActivity() {
     private lateinit var currentPocketMoney: TextView
     private lateinit var oweAmount: TextView
+    private lateinit var expenseBar: ProgressBar
     private lateinit var toolbar: Toolbar
     private lateinit var navbar: NavigationView
     private lateinit var drawerLayout: DrawerLayout
@@ -58,6 +60,7 @@ class HomeActivity : AppCompatActivity() {
 
         currentPocketMoney = findViewById(R.id.currentPocketMoney)
         oweAmount = findViewById(R.id.oweAmount)
+        expenseBar = findViewById(R.id.pocketMoneyProgress)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         navbar.setNavigationItemSelectedListener { menuItem ->
@@ -98,5 +101,7 @@ class HomeActivity : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+
+//        calculateProgressBar()
     }
 }

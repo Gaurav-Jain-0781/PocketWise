@@ -56,7 +56,8 @@
                     android:layout_marginBottom="8dp"
                     android:text="Yash Mehta"
                     android:textColor="@color/background"
-                    android:textSize="34sp"
+                    android:fontFamily="@font/righteous"
+                    android:textSize="40sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -66,8 +67,8 @@
                     android:layout_below="@id/name"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="16dp"
-                    android:fontFamily="@font/lato_light_italic"
-                    android:text="2241129"
+                    android:fontFamily="@font/righteous"
+                    android:text="2241164"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="18sp"
@@ -81,11 +82,10 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="16dp"
                     android:text="Christ University, Banglore"
-                    android:fontFamily="@font/lato_light_italic"
+                    android:fontFamily="@font/righteous"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:textSize="18sp"/>
 
                 <TextView
                     android:id="@+id/email"
@@ -95,11 +95,10 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="16dp"
                     android:text="yashmht44@gmail.com"
-                    android:fontFamily="@font/lato_light_italic"
+                    android:fontFamily="@font/righteous"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:textSize="18sp"/>
             </RelativeLayout>
 
             <LinearLayout
@@ -114,6 +113,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:text="Current Balance : "
+                    android:fontFamily="@font/dosis_semibold"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
@@ -124,6 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:text="Pocket Money : "
+                    android:fontFamily="@font/dosis_semibold"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
@@ -134,9 +135,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:text="Total Savings : "
+                    android:fontFamily="@font/dosis_semibold"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:layout_gravity="start"
+                    android:text="Income"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/dosis_medium"
+                    android:textSize="30sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -146,36 +159,38 @@
                     <Button
                         android:id="@+id/updatePocket"
                         android:layout_height="wrap_content"
-                        android:layout_width="150dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
                         android:layout_gravity="center"
-                        android:text="Update Monthly Pocket Money"
+                        android:text="Monthly Pocket Money"
                         android:fontFamily="@font/dosis_medium"
                         android:textStyle="bold"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="30sp"
+                        android:textSize="20sp"
                         android:layout_marginTop="25dp"
                         android:layout_marginBottom="40dp"
                         android:padding="10dp"
                         android:layout_margin="10dp"
-                        android:background="@drawable/rounded_corner_sec"/>
+                        android:backgroundTint="@color/secondary"/>
 
                     <Button
                         android:id="@+id/updateSavings"
                         android:layout_height="wrap_content"
-                        android:layout_width="150dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
                         android:layout_gravity="center"
-                        android:text="Update Total Savings Today"
+                        android:text="Total Savings Today"
                         android:fontFamily="@font/dosis_medium"
                         android:textStyle="bold"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="30sp"
+                        android:textSize="20sp"
                         android:layout_marginTop="25dp"
                         android:layout_marginBottom="40dp"
                         android:padding="10dp"
                         android:layout_margin="10dp"
-                        android:background="@drawable/rounded_corner_sec"/>
+                        android:backgroundTint="@color/secondary"/>
 
                 </LinearLayout>
 
@@ -190,7 +205,7 @@
         android:layout_height="match_parent"
         android:background="@color/primary"
         android:layout_gravity="start"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="0dp"
         app:itemTextColor="@color/black"
         app:menu="@menu/my_drawer_menu">
 

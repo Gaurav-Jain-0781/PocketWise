@@ -548,8 +548,10 @@
         android:id="@+id/nav_view"
         android:layout_width="280dp"
         android:layout_height="match_parent"
-        android:background="@color/secondary"
+        android:background="@color/primary"
         android:layout_gravity="start"
+        android:layout_marginTop="35dp"
+        app:itemTextColor="@color/black"
         app:menu="@menu/my_drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -220,8 +220,8 @@ class IOweUActivity : AppCompatActivity() {
                 text = date
                 setPadding(datePadding, datePadding, datePadding, datePadding)
                 gravity = Gravity.START
-                setTextColor(ContextCompat.getColor(context, R.color.black))
-                typeface = ResourcesCompat.getFont(context, R.font.lato_light_italic)
+                setTextColor(ContextCompat.getColor(context, R.color.background))
+                typeface = ResourcesCompat.getFont(context, R.font.dosis_medium)
                 setTypeface(typeface, Typeface.BOLD)
             }
             owingLayout.addView(dateTextView)
@@ -265,15 +265,15 @@ class IOweUActivity : AppCompatActivity() {
                     setTypeface(null, Typeface.BOLD)
                     setTextColor(ContextCompat.getColor(context, R.color.black))
                     gravity = Gravity.START
-                    typeface = ResourcesCompat.getFont(context, R.font.lato_light_italic)
+                    typeface = ResourcesCompat.getFont(context, R.font.righteous)
                 }
 
                 val messageTextView = TextView(this).apply {
                     text = owing.note
                     textSize = 16f
-                    setTextColor(ContextCompat.getColor(context, R.color.black))
+                    setTextColor(ContextCompat.getColor(context, R.color.notes))
                     gravity = Gravity.START
-                    typeface = ResourcesCompat.getFont(context, R.font.lato_light_italic)
+                    typeface = ResourcesCompat.getFont(context, R.font.dosis_semibold)
                 }
 
                 val verticalAmountLayout = LinearLayout(this).apply {
@@ -304,6 +304,7 @@ class IOweUActivity : AppCompatActivity() {
                     }
                     textSize = 25f
                     gravity = Gravity.END
+                    typeface = ResourcesCompat.getFont(context, R.font.righteous)
                 }
 
                 verticalLayout.addView(titleTextView)

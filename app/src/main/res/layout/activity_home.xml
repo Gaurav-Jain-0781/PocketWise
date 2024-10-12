@@ -6,7 +6,8 @@
     android:id="@+id/myDrawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/black"
+    android:backgroundTint="@color/black"
     tools:context=".HomeActivity">
 
     <ScrollView
@@ -40,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Current balance in your pocket"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/notes"
                     android:paddingHorizontal="16dp"
                     android:textSize="20sp"
                     android:fontFamily="@font/dosis_medium"/>
@@ -77,6 +78,7 @@
                             android:textColor="@android:color/holo_red_light"
                             android:textSize="23sp"
                             android:fontFamily="@font/dosis_semibold"/>
+
                         <TextView
                             android:id="@+id/lendAmount"
                             android:layout_width="wrap_content"
@@ -113,10 +115,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Savings"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/background"
                     android:paddingHorizontal="16dp"
-                    android:textSize="30sp"
-                    android:fontFamily="@font/dosis_medium"/>
+                    android:textSize="20sp"
+                    android:fontFamily="@font/righteous"/>
 
                 <LinearLayout
                     android:id="@+id/savingsSection"
@@ -127,8 +129,9 @@
                     android:layout_marginBottom="16dp">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
                         android:orientation="vertical"
                         android:layout_marginEnd="15dp"
                         android:padding="20dp"
@@ -137,10 +140,10 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/lato_light_italic"
+                            android:fontFamily="@font/dosis_semibold"
                             android:gravity="center"
                             android:text="Last Savings"
-                            android:textColor="#000000"
+                            android:textColor="@color/black"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             tools:ignore="HardcodedText" />
@@ -148,18 +151,19 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/lato_light_italic"
+                            android:fontFamily="@font/righteous"
                             android:gravity="center"
                             android:text="20"
-                            android:textColor="#000000"
+                            android:textColor="@color/white"
                             android:textSize="60sp"
                             android:textStyle="bold"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
                         android:orientation="vertical"
                         android:layout_marginStart="15dp"
                         android:padding="20dp"
@@ -168,7 +172,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/lato_light_italic"
+                            android:fontFamily="@font/dosis_semibold"
                             android:gravity="center"
                             android:text="Total Savings"
                             android:textColor="#000000"
@@ -179,10 +183,10 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/lato_light_italic"
+                            android:fontFamily="@font/righteous"
                             android:gravity="center"
                             android:text="10"
-                            android:textColor="#000000"
+                            android:textColor="@color/white"
                             android:textSize="60sp"
                             android:textStyle="bold"
                             tools:ignore="HardcodedText" />
@@ -194,10 +198,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Expenses"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/background"
                     android:paddingHorizontal="16dp"
-                    android:textSize="30sp"
-                    android:fontFamily="@font/dosis_medium"/>
+                    android:textSize="20sp"
+                    android:fontFamily="@font/righteous"/>
 
                 <LinearLayout
                     android:id="@+id/expenseAnalyticsSection"
@@ -208,17 +212,18 @@
                     android:layout_marginBottom="16dp">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
                         android:orientation="vertical"
-                        android:layout_marginEnd="20dp"
+                        android:layout_marginEnd="15dp"
                         android:padding="20dp"
                         android:background="@drawable/rounded_corner_sec">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/lato_light_italic"
+                            android:fontFamily="@font/dosis_semibold"
                             android:gravity="center"
                             android:text="Avg Expense"
                             android:textColor="#000000"
@@ -229,41 +234,42 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/lato_light_italic"
+                            android:fontFamily="@font/righteous"
                             android:gravity="center"
                             android:text="20"
-                            android:textColor="#000000"
+                            android:textColor="@color/white"
                             android:textSize="60sp"
                             android:textStyle="bold"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
                         android:orientation="vertical"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="15dp"
                         android:padding="20dp"
                         android:background="@drawable/rounded_corner_sec">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/lato_light_italic"
+                            android:fontFamily="@font/dosis_semibold"
                             android:gravity="center"
                             android:text="Total Expense"
                             android:textColor="#000000"
-                            android:textSize="17sp"
+                            android:textSize="15sp"
                             android:textStyle="bold"
                             tools:ignore="HardcodedText" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/lato_light_italic"
+                            android:fontFamily="@font/righteous"
                             android:gravity="center"
                             android:text="10"
-                            android:textColor="#000000"
+                            android:textColor="@color/white"
                             android:textSize="60sp"
                             android:textStyle="bold"
                             tools:ignore="HardcodedText" />
@@ -275,10 +281,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Suggestions"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/background"
                     android:paddingHorizontal="16dp"
-                    android:textSize="30sp"
-                    android:fontFamily="@font/dosis_medium"/>
+                    android:textSize="20sp"
+                    android:fontFamily="@font/righteous"/>
 
                 <LinearLayout
                     android:id="@+id/suggestionsSection"
@@ -292,15 +298,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginBottom="20dp"
-                        android:padding="20dp"
-                        android:background="@drawable/rounded_corner_sec">
+                        android:padding="20dp">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/lato_light_italic"
-                            android:gravity="center"
+                            android:gravity="start"
                             android:text="1. Consider reducing Entertainment spending by $50 next month."
                             android:textColor="#000000"
                             android:textSize="20sp"
@@ -313,15 +317,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:background="@drawable/rounded_corner_sec">
+                        android:paddingHorizontal="20dp">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/lato_light_italic"
-                            android:gravity="center"
+                            android:gravity="start"
                             android:text="2. Limit dining out to twice a week to save an extra $30."
                             android:textColor="#000000"
                             android:textSize="20sp"
@@ -334,14 +336,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="20dp"
-                        android:background="@drawable/rounded_corner_sec">
+                        android:padding="20dp">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/lato_light_italic"
-                            android:gravity="center"
+                            android:gravity="start"
                             android:text="3. Increase your savings by allocating an additional $40 to your emergency fund next month."
                             android:textColor="#000000"
                             android:textSize="20sp"
