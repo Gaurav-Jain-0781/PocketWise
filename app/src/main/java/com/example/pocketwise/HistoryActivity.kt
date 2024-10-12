@@ -209,7 +209,7 @@ class HistoryActivity : AppCompatActivity() {
                         marginEnd = imageMarginEnd
                     }
                     scaleType = ImageView.ScaleType.CENTER_CROP
-                    setImageResource(R.drawable.account)
+                    setImageResource(R.drawable.expense_icon)
                     background = ContextCompat.getDrawable(context, R.drawable.circular_background)
                 }
 
