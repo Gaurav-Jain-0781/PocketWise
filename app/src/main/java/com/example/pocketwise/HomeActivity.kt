@@ -2,9 +2,12 @@ package com.example.pocketwise
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -37,6 +40,13 @@ import java.util.*
 class HomeActivity : AppCompatActivity() {
     private lateinit var currentPocketMoney: TextView
     private lateinit var oweAmount: TextView
+    private lateinit var lendAmount: TextView
+    private lateinit var lastSavings: TextView
+    private lateinit var totalSavings: TextView
+    private lateinit var avgExpenses: TextView
+    private lateinit var totalExpenses: TextView
+    private lateinit var addIncomeButton: Button
+
     private lateinit var expenseBar: ProgressBar
     private lateinit var lineChart: LineChart
     private lateinit var pieChart: PieChart
@@ -44,8 +54,62 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var navbar: NavigationView
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    private val balanceArray : Array<String?> = arrayOf(null, null, null, null, null, null, null)
     private var topCategories = mutableListOf<String>()
     private var topCategoryTotals = mutableListOf<Float>()
+
+    private val categorySuggestions = mapOf(
+        "Food & Drink" to listOf(
+            "Consider preparing meals at home to save $50 next month.",
+            "Limit dining out to twice a week to save an extra $30.",
+            "Try meal prepping to reduce impulsive food purchases."
+        ),
+        "Transport" to listOf(
+            "Use public transportation to save on fuel costs.",
+            "Consider carpooling to reduce travel expenses.",
+            "Walk or bike for short trips to save fuel and improve health."
+        ),
+        "Rent" to listOf(
+            "Negotiate with your landlord for a potential discount on rent.",
+            "Consider sharing a flat to reduce monthly rent costs.",
+            "Look for cheaper rent alternatives in different areas."
+        ),
+        "Shopping" to listOf(
+            "Set a monthly shopping budget to avoid overspending.",
+            "Wait for seasonal sales to buy expensive items.",
+            "Use discount coupons and cashback offers for shopping."
+        ),
+        "Entertainment" to listOf(
+            "Reduce entertainment subscriptions to save $50 per month.",
+            "Limit movie outings to once a month to save on tickets.",
+            "Use free or low-cost activities for entertainment."
+        ),
+        "Bills" to listOf(
+            "Review and renegotiate utility plans for better rates.",
+            "Switch to energy-saving appliances to lower your bills.",
+            "Automate bill payments to avoid late fees."
+        ),
+        "Health" to listOf(
+            "Exercise at home instead of paying for a gym membership.",
+            "Switch to generic medicines to reduce healthcare expenses.",
+            "Use free health clinics for basic health services."
+        ),
+        "Education" to listOf(
+            "Take free or discounted online courses instead of paid ones.",
+            "Buy used textbooks or digital copies to save money.",
+            "Apply for scholarships and financial aid to cover tuition."
+        ),
+        "Savings" to listOf(
+            "Increase your emergency fund by setting aside an extra $50.",
+            "Set up automatic transfers to your savings account monthly.",
+            "Reduce unnecessary expenses to increase savings by $100."
+        ),
+        "Others" to listOf(
+            "Track miscellaneous expenses to identify areas for saving.",
+            "Cut down on impulse purchases by sticking to a budget.",
+            "Set a limit on unplanned expenses to save more."
+        )
+    )
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -83,6 +147,13 @@ class HomeActivity : AppCompatActivity() {
 
         currentPocketMoney = findViewById(R.id.currentPocketMoney)
         oweAmount = findViewById(R.id.oweAmount)
+        lendAmount = findViewById(R.id.lendAmount)
+        addIncomeButton = findViewById(R.id.addPocketMoneyBtn)
+        lastSavings = findViewById(R.id.lastSavings)
+        totalSavings = findViewById(R.id.totalSavings)
+        avgExpenses=findViewById(R.id.avgExpenses)
+        totalExpenses = findViewById(R.id.totalExpenses)
+
         expenseBar = findViewById(R.id.pocketMoneyProgress)
         lineChart = findViewById(R.id.lineChart)
         pieChart = findViewById(R.id.pieChart)
@@ -125,9 +196,154 @@ class HomeActivity : AppCompatActivity() {
             true
         }
 
+        updateAccountPocketDetails { balances ->
+            if (checkSession() && balances != null) {
+                currentPocketMoney.text =  currentPocketMoney.text.toString() + balances[0]
+                lendAmount.text =  lendAmount.text.toString() + "+ " + balances[3]
+                oweAmount.text =  oweAmount.text.toString() + "- " + balances[4]
+                totalSavings.text = totalSavings.text.toString()+ balances[2]
+                lastSavings.text =  lastSavings.text.toString()+ balances[5]
+
+                val monthlyPocket = balances[1]?.toFloatOrNull() ?: 0f
+                val currentBalance = balances[0]?.toFloatOrNull() ?: 0f
+                val calculatedTotalExpenses = (monthlyPocket - currentBalance).toInt()
+                totalExpenses.text = totalExpenses.text.toString() + calculatedTotalExpenses.toString()
+
+                val daysInMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+                val avgExpense = if (daysInMonth > 0) (calculatedTotalExpenses / daysInMonth).toInt() else 0
+                avgExpenses.text = avgExpenses.text.toString() + avgExpense.toString()
+            } else {
+                Toast.makeText(this, "Failed to load Balances data", Toast.LENGTH_SHORT).show()
+            }
+        }
         calculateExpense()
         fetchExpensesForLat7Days()
         fetchExpensesByCategories()
+
+        addIncomeButton.setOnClickListener {
+            updatePocketMoney()
+        }
+
+        val userTopCategory = "Food & Drink"
+        showCategorySuggestions(userTopCategory)
+    }
+
+    private fun showCategorySuggestions(topCategory: String) {
+        val suggestions = categorySuggestions[topCategory]
+        if (suggestions != null) {
+            findViewById<TextView>(R.id.suggestion1).text = suggestions[0]
+            findViewById<TextView>(R.id.suggestion2).text = suggestions[1]
+            findViewById<TextView>(R.id.suggestion3).text = suggestions[2]
+        } else {
+            findViewById<TextView>(R.id.suggestion1).text = "No suggestions available"
+        }
+    }
+    private fun updatePocketMoney() {
+        if (checkSession()){
+            val sharedPreference = getSharedPreferences("user_session", MODE_PRIVATE)
+            val userId = sharedPreference.getString("userId", null)
+
+            if(userId != null){
+
+                val dialogBuilder = AlertDialog.Builder(this)
+                dialogBuilder.setTitle("Got extra money this month? Add it to your current pocket")
+
+                val input = EditText(this)
+                input.inputType = InputType.TYPE_CLASS_NUMBER
+                input.hint = "Enter new extra income amount"
+                dialogBuilder.setView(input)
+
+                dialogBuilder.setPositiveButton("Yes") { dialog, _ ->
+                    val pocketMoneyString = input.text.toString()
+
+                    if (pocketMoneyString.isNotEmpty()) {
+                        val extraPocketMoney = pocketMoneyString.toLong()
+
+                        val db = Firebase.firestore
+                        val studentRef = db.collection("students").document(userId)
+
+                        db.collection("balance")
+                            .whereEqualTo("student_ref", studentRef)
+                            .get()
+                            .addOnSuccessListener { document ->
+                                if (!document.isEmpty) {
+                                    val d = document.documents[0]
+                                    val balanceRef = d.reference
+                                    val currentBalance = d.getLong("currentBalance")
+                                    val newBalance = currentBalance?.plus(extraPocketMoney)
+
+                                    if (currentBalance != null) {
+                                        balanceRef.update("currentBalance", newBalance)
+                                            .addOnSuccessListener {
+                                                Toast.makeText(this, "Balance updated successfully", Toast.LENGTH_SHORT).show()
+                                                currentPocketMoney.text="₹$newBalance"
+                                            }
+                                            .addOnFailureListener {
+                                                Toast.makeText(this, "Error updating balance", Toast.LENGTH_SHORT).show()
+                                            }
+                                    }
+                                } else {
+                                    Toast.makeText(this, "No balance document found for the student", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                            .addOnFailureListener { exception ->
+                                Toast.makeText(this, "Error fetching balance", Toast.LENGTH_SHORT).show()
+                            }
+                    } else {
+                        Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+                dialogBuilder.setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.cancel()
+                }
+
+                dialogBuilder.create().show()
+            } else {
+                Toast.makeText(this, "Error in User Login", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Error in User Session", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateAccountPocketDetails(callback: (Array<String?>?) -> Unit){
+        if(checkSession()){
+            val sharedPreference = getSharedPreferences("user_session", MODE_PRIVATE)
+            val userId = sharedPreference.getString("userId", null)
+            if (userId != null){
+                val db = Firebase.firestore
+                val studentRef = db.collection("students").document(userId)
+
+                db.collection("balance")
+                    .whereEqualTo("student_ref",studentRef)
+                    .get()
+                    .addOnSuccessListener(){document ->
+                        if (document.isEmpty){
+                            Toast.makeText(this, "Error in Fetching Data", Toast.LENGTH_SHORT).show()
+                            callback(null)
+                        } else {
+                            for (d in document.documents){
+                                balanceArray[0] = d.getLong("currentBalance").toString()
+                                balanceArray[1] = d.getLong("monthlyPocket").toString()
+                                balanceArray[2] = d.getLong("savings").toString()
+                                balanceArray[3] = d.getLong("lent").toString()
+                                balanceArray[4] = d.getLong("borrowed").toString()
+                                balanceArray[5] = d.getLong("last_savings").toString()
+                            }
+                            callback(balanceArray)
+                        }
+                    }
+                    .addOnFailureListener(){
+                        Toast.makeText(this, "Error in Fetching Data", Toast.LENGTH_SHORT).show()
+                        callback(null)
+                    }
+            }else{
+                Toast.makeText(this, "Error in User Login", Toast.LENGTH_SHORT).show()
+            }
+        }else{
+            Toast.makeText(this, "Error in User Session", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun calculateExpense() {

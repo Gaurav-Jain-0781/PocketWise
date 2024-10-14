@@ -64,9 +64,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="₹500"
+                            android:text="₹"
                             android:textColor="#000"
-                            android:textSize="40sp"
+                            android:textSize="45sp"
                             android:textStyle="bold"
                             android:fontFamily="@font/righteous"/>
 
@@ -74,7 +74,7 @@
                             android:id="@+id/oweAmount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Owed: - ₹100"
+                            android:text="Borrowed: "
                             android:textColor="@android:color/holo_red_light"
                             android:textSize="23sp"
                             android:fontFamily="@font/dosis_semibold"/>
@@ -83,7 +83,7 @@
                             android:id="@+id/lendAmount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Receivable: + ₹150"
+                            android:text="Lent: "
                             android:textColor="@android:color/holo_green_light"
                             android:textSize="23sp"
                             android:fontFamily="@font/dosis_semibold"/>
@@ -142,20 +142,22 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/dosis_semibold"
                             android:gravity="center"
-                            android:text="Last Savings"
+                            android:text="Last Month"
                             android:textColor="@color/black"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             tools:ignore="HardcodedText" />
 
                         <TextView
+                            android:id="@+id/lastSavings"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/righteous"
                             android:gravity="center"
-                            android:text="20"
+                            android:text="₹"
+                            android:textSize="33sp"
+                            android:paddingVertical="10dp"
                             android:textColor="@color/white"
-                            android:textSize="60sp"
                             android:textStyle="bold"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>
@@ -181,13 +183,15 @@
                             tools:ignore="HardcodedText" />
 
                         <TextView
+                            android:id="@+id/totalSavings"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/righteous"
                             android:gravity="center"
-                            android:text="10"
+                            android:text="₹"
+                            android:textSize="33sp"
+                            android:paddingVertical="10dp"
                             android:textColor="@color/white"
-                            android:textSize="60sp"
                             android:textStyle="bold"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>
@@ -232,13 +236,15 @@
                             tools:ignore="HardcodedText" />
 
                         <TextView
+                            android:id="@+id/avgExpenses"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/righteous"
                             android:gravity="center"
-                            android:text="20"
+                            android:text="₹"
+                            android:textSize="33sp"
+                            android:paddingVertical="10dp"
                             android:textColor="@color/white"
-                            android:textSize="60sp"
                             android:textStyle="bold"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>
@@ -264,13 +270,15 @@
                             tools:ignore="HardcodedText" />
 
                         <TextView
+                            android:id="@+id/totalExpenses"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/righteous"
                             android:gravity="center"
-                            android:text="10"
+                            android:text="₹"
+                            android:textSize="33sp"
+                            android:paddingVertical="10dp"
                             android:textColor="@color/white"
-                            android:textSize="60sp"
                             android:textStyle="bold"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>
@@ -320,7 +328,8 @@
                     android:textColor="@color/background"
                     android:paddingHorizontal="16dp"
                     android:textSize="20sp"
-                    android:fontFamily="@font/righteous"/>
+                    android:fontFamily="@font/righteous"
+                    android:layout_marginTop="50dp"/>
 
                 <LinearLayout
                     android:id="@+id/suggestionsSection"
@@ -337,6 +346,7 @@
                         android:padding="20dp">
 
                         <TextView
+                            android:id="@+id/suggestion1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/lato_light_italic"
@@ -356,6 +366,7 @@
                         android:paddingHorizontal="20dp">
 
                         <TextView
+                            android:id="@+id/suggestion2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/lato_light_italic"
@@ -375,6 +386,7 @@
                         android:padding="20dp">
 
                         <TextView
+                            android:id="@+id/suggestion3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/lato_light_italic"
