@@ -60,8 +60,8 @@ class HomeActivity : AppCompatActivity() {
 
     private val categorySuggestions = mapOf(
         "Food & Drink" to listOf(
-            "Consider preparing meals at home to save $50 next month.",
-            "Limit dining out to twice a week to save an extra $30.",
+            "Consider preparing meals at home to save ₹50 next month.",
+            "Limit dining out to twice a week to save an extra ₹30.",
             "Try meal prepping to reduce impulsive food purchases."
         ),
         "Transport" to listOf(
@@ -102,7 +102,7 @@ class HomeActivity : AppCompatActivity() {
         "Savings" to listOf(
             "Increase your emergency fund by setting aside an extra $50.",
             "Set up automatic transfers to your savings account monthly.",
-            "Reduce unnecessary expenses to increase savings by $100."
+            "Reduce unnecessary expenses to increase savings by ₹100."
         ),
         "Others" to listOf(
             "Track miscellaneous expenses to identify areas for saving.",
@@ -216,6 +216,7 @@ class HomeActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to load Balances data", Toast.LENGTH_SHORT).show()
             }
         }
+
         calculateExpense()
         fetchExpensesForLat7Days()
         fetchExpensesByCategories()

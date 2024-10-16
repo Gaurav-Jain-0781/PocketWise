@@ -43,7 +43,7 @@ class ExpenseActivity : AppCompatActivity() {
 
     private val categories = listOf(
         "Food & Drink", "Transport", "Rent", "Shopping", "Entertainment",
-        "Bills", "Health", "Education", "Savings", "Others"
+        "Bills", "Health", "Education", "Others"
     )
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -144,7 +144,6 @@ class ExpenseActivity : AppCompatActivity() {
         category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 selectedCategory = parent.getItemAtPosition(position) as String
-                Toast.makeText(this@ExpenseActivity, "Selected: $selectedCategory", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -181,13 +180,24 @@ class ExpenseActivity : AppCompatActivity() {
                 val studentRef = db.collection("students").document(userId)
                 val note = notes.text.toString()
                 val amount = amount.text.toString()
-                val currentDate = Timestamp.now()
+                val selectedDate = dateText.text.toString()
+
+                val dateFormatter = java.text.SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val dateObject: Date? = dateFormatter.parse(selectedDate)
+
+                val expenseTimestamp = if (dateObject != null) {
+                    Timestamp(dateObject)
+                } else {
+                    Timestamp.now()
+                }
+
+                Log.i("Date", expenseTimestamp.toString())
 
                 val transactionHashMap = hashMapOf(
                     "category" to selectedCategory,
                     "note" to note,
                     "amount" to amount.toLong(),
-                    "date" to currentDate,
+                    "date" to expenseTimestamp,
                     "user_ref" to studentRef
                 )
 
